@@ -20,6 +20,8 @@ namespace CsLanBeacon.ConsoleBeacon
             beacon.Start();
 
             Console.ReadLine();
+            beacon.Stop();
+            Console.ReadLine();
         }
     }
 }

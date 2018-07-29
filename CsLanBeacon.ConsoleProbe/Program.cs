@@ -11,14 +11,16 @@ namespace CsLanBeacon.ConsoleProbe
     {
         static void Main(string[] args)
         {
-            var beacon = new Probe("CustomKey", TimeSpan.FromSeconds(1));
+            var probe = new Probe("CustomKey", TimeSpan.FromSeconds(1));
 
-            beacon.ProbeActiveEvent += (s, e) => { Console.WriteLine("Probe active."); };
-            beacon.ProbeStoppedEvent += (s, e) => { Console.WriteLine("Probe stopped."); };
-            beacon.ProbeBroadcastEvent += (s, e) => { Console.WriteLine("Sending broadcast."); };
-            beacon.ProbeReceivedResponseEvent += (s, e) => { Console.WriteLine("Received response."); };
-            beacon.Start();
+            probe.ProbeActiveEvent += (s, e) => { Console.WriteLine("Probe active."); };
+            probe.ProbeStoppedEvent += (s, e) => { Console.WriteLine("Probe stopped."); };
+            probe.ProbeBroadcastEvent += (s, e) => { Console.WriteLine("Sending broadcast."); };
+            probe.ProbeReceivedResponseEvent += (s, e) => { Console.WriteLine("Received response."); };
+            probe.Start();
 
+            Console.ReadLine();
+            probe.Stop();
             Console.ReadLine();
         }
     }

@@ -93,7 +93,8 @@ namespace CsLanBeacon.Lib
 
                             // It is possible for the time to be negative when the elapsedTime is slightly larger
                             // than the desired waiting time! This is mostly seen when debugging the application.
-                            if (remainingTime.Seconds < 0)
+                            // The "total" number is used since it is a double while the "seconds" one is an int.
+                            if (remainingTime.TotalSeconds < 0)
                             {
                                 remainingTime = TimeSpan.FromSeconds(0);
                             }
