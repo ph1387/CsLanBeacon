@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CsLanBeacon.Lib
 {
-    public class Class1
+    public enum State
     {
+        RUNNING,
+        STOPPED
     }
 }
