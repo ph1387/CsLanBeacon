@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsLanBeacon.Lib", "CsLanBeacon.Lib\CsLanBeacon.Lib.csproj", "{14535DC1-8A41-4D9C-B656-ACDBBF87F567}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsLanBeacon.ConsoleBeacon", "CsLanBeacon.ConsoleBeacon\CsLanBeacon.ConsoleBeacon.csproj", "{04D10799-5B21-4972-BA1E-9276B95B4A74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsLanBeacon.ConsoleProbe", "CsLanBeacon.ConsoleProbe\CsLanBeacon.ConsoleProbe.csproj", "{F4E54602-33B1-4274-8505-B4F84BF515E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{14535DC1-8A41-4D9C-B656-ACDBBF87F567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14535DC1-8A41-4D9C-B656-ACDBBF87F567}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14535DC1-8A41-4D9C-B656-ACDBBF87F567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04D10799-5B21-4972-BA1E-9276B95B4A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04D10799-5B21-4972-BA1E-9276B95B4A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04D10799-5B21-4972-BA1E-9276B95B4A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04D10799-5B21-4972-BA1E-9276B95B4A74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E54602-33B1-4274-8505-B4F84BF515E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E54602-33B1-4274-8505-B4F84BF515E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E54602-33B1-4274-8505-B4F84BF515E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E54602-33B1-4274-8505-B4F84BF515E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
