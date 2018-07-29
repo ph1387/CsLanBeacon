@@ -175,10 +175,6 @@ namespace CsLanBeacon.Lib
             {
                 Debug.WriteLine(e.Message);
             }
-            catch (SocketException e)
-            {
-                Debug.WriteLine(e.Message);
-            }
         }
     }
 }
