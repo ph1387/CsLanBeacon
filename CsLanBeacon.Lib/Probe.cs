@@ -12,6 +12,11 @@ namespace CsLanBeacon.Lib
 {
     public class Probe : BeaconComponentBase
     {
+        public EventHandler ProbeActiveEvent;
+        public EventHandler ProbeStoppedEvent;
+        public EventHandler ProbeBroadcastEvent;
+        public EventHandler ProbeReceivedResponseEvent;
+
         private int _probeReceivePort;
         public int ProbeReceivePort
         {
@@ -60,6 +65,8 @@ namespace CsLanBeacon.Lib
                     var ip = this.GetOwnIpAddress();
                     var message = Encoding.ASCII.GetBytes(Key);
 
+                    this.ProbeActiveEvent?.Invoke(this, new EventArgs());
+
                     using (var probeClient = new UdpClient(new IPEndPoint(ip, ProbeReceivePort)))
                     {
                         var startTime = DateTime.Now;
@@ -80,7 +87,7 @@ namespace CsLanBeacon.Lib
                             {
                                 startTime = currentTime;
 
-                                Console.WriteLine("Sending broadcast as " + probeClient.Client.LocalEndPoint);
+                                this.ProbeBroadcastEvent?.Invoke(this, new EventArgs());
                                 probeClient.Send(message, message.Length, new IPEndPoint(IPAddress.Broadcast, Port));
                             }
 
@@ -94,7 +101,11 @@ namespace CsLanBeacon.Lib
                             this.sync.WaitOne(remainingTime);
                         }
                     }
-                }, token);
+                }, token)
+                .ContinueWith((prevTask) => 
+                {
+                    this.ProbeStoppedEvent?.Invoke(this, new EventArgs());
+                });
             }
         }
 
@@ -134,8 +145,7 @@ namespace CsLanBeacon.Lib
 
                 if (Key.Equals(message))
                 {
-                    Console.WriteLine("Received Response from beacon: " + beacon);
-                    Debug.WriteLine("Received Response from beacon: " + beacon);
+                    this.ProbeReceivedResponseEvent?.Invoke(this, new EventArgs());
                 }
             }
             // Needed since the disposed object is used once when the worker Task is cancelled.

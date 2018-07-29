@@ -12,9 +12,14 @@ namespace CsLanBeacon.Lib
 {
     public class Beacon : BeaconComponentBase
     {
+        public EventHandler BeaconActiveEvent;
+        public EventHandler BeaconStoppedEvent;
+        public EventHandler BeaconBroadcastReceivedEvent;
+        public EventHandler BeaconRespondEvent;
+
         public Beacon(string key, int port = 8080) : base(key, port)
         {
-           
+
         }
 
         public override void Start()
@@ -27,6 +32,8 @@ namespace CsLanBeacon.Lib
 
                 Task.Run(() =>
                 {
+                    this.BeaconActiveEvent?.Invoke(this, new EventArgs());
+
                     using (var server = new UdpClient(Port))
                     {
                         while (!token.IsCancellationRequested)
@@ -36,7 +43,11 @@ namespace CsLanBeacon.Lib
                             this.sync.WaitOne();
                         }
                     }
-                }, token);
+                }, token)
+                .ContinueWith((prevTask) => 
+                {
+                    this.BeaconStoppedEvent?.Invoke(this, new EventArgs());
+                });
             }
         }
 
@@ -52,6 +63,8 @@ namespace CsLanBeacon.Lib
 
         private void HandleBeginReceive(IAsyncResult asyncResult)
         {
+            this.BeaconBroadcastReceivedEvent?.Invoke(this, new EventArgs());
+            
             try
             {
                 this.sync.Set();
@@ -66,8 +79,7 @@ namespace CsLanBeacon.Lib
                     var responseBytes = Encoding.ASCII.GetBytes(Key);
                     var responseEndpoint = new IPEndPoint(client.Address, client.Port);
 
-                    Debug.WriteLine("Responding to client: " + responseEndpoint);
-                    Console.WriteLine("Responding to client: " + responseEndpoint);
+                    this.BeaconRespondEvent?.Invoke(this, new EventArgs());
                     server.Send(responseBytes, responseBytes.Length, responseEndpoint);
                 }
             }
