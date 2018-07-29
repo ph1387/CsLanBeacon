@@ -16,7 +16,10 @@ namespace CsLanBeacon.ConsoleProbe
             probe.ProbeActiveEvent += (s, e) => { Console.WriteLine("Probe active."); };
             probe.ProbeStoppedEvent += (s, e) => { Console.WriteLine("Probe stopped."); };
             probe.ProbeBroadcastEvent += (s, e) => { Console.WriteLine("Sending broadcast."); };
-            probe.ProbeReceivedResponseEvent += (s, e) => { Console.WriteLine("Received response."); };
+            probe.ProbeReceivedResponseEvent += (s, e) =>
+            {
+                Console.WriteLine(String.Format("Received response from {0}", e.BeaconEndpoint));
+            };
             probe.Start();
 
             Console.ReadLine();

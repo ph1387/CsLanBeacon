@@ -14,7 +14,7 @@ namespace CsLanBeacon.Lib
     {
         public EventHandler BeaconActiveEvent;
         public EventHandler BeaconStoppedEvent;
-        public EventHandler BeaconRespondEvent;
+        public EventHandler<BeaconResponseEventArgs> BeaconResponseEvent;
 
         public Beacon(string key, int port = 8080) : base(key, port)
         {
@@ -43,7 +43,7 @@ namespace CsLanBeacon.Lib
                         }
                     }
                 }, token)
-                .ContinueWith((prevTask) => 
+                .ContinueWith((prevTask) =>
                 {
                     this.BeaconStoppedEvent?.Invoke(this, new EventArgs());
                 });
@@ -76,7 +76,7 @@ namespace CsLanBeacon.Lib
                     var responseBytes = Encoding.ASCII.GetBytes(Key);
                     var responseEndpoint = new IPEndPoint(client.Address, client.Port);
 
-                    this.BeaconRespondEvent?.Invoke(this, new EventArgs());
+                    this.BeaconResponseEvent?.Invoke(this, new BeaconResponseEventArgs(responseEndpoint));
                     server.Send(responseBytes, responseBytes.Length, responseEndpoint);
                 }
             }

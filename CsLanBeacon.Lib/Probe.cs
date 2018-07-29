@@ -15,7 +15,7 @@ namespace CsLanBeacon.Lib
         public EventHandler ProbeActiveEvent;
         public EventHandler ProbeStoppedEvent;
         public EventHandler ProbeBroadcastEvent;
-        public EventHandler ProbeReceivedResponseEvent;
+        public EventHandler<ProbeResponseEventArgs> ProbeReceivedResponseEvent;
 
         private int _probeReceivePort;
         public int ProbeReceivePort
@@ -81,9 +81,9 @@ namespace CsLanBeacon.Lib
                             var allowBroadcast = elapsedTime.CompareTo(WaitTimeBetweenPings) > 0;
                             var remainingTime = WaitTimeBetweenPings.Subtract(elapsedTime);
 
-                            lock(this.canReceiveLock)
+                            lock (this.canReceiveLock)
                             {
-                                if(this.canReceiveNew)
+                                if (this.canReceiveNew)
                                 {
                                     this.canReceiveNew = false;
                                     probeClient.BeginReceive(this.HandleBeginReceive, probeClient);
@@ -113,7 +113,7 @@ namespace CsLanBeacon.Lib
                         }
                     }
                 }, token)
-                .ContinueWith((prevTask) => 
+                .ContinueWith((prevTask) =>
                 {
                     this.ProbeStoppedEvent?.Invoke(this, new EventArgs());
                 });
@@ -142,7 +142,7 @@ namespace CsLanBeacon.Lib
                 this.sync.Set();
 
                 // Ensure that another start of the same probe can receive answers again.
-                lock(this.canReceiveLock)
+                lock (this.canReceiveLock)
                 {
                     this.canReceiveNew = true;
                 }
@@ -155,7 +155,7 @@ namespace CsLanBeacon.Lib
             {
                 this.sync.Set();
 
-                lock(this.canReceiveLock)
+                lock (this.canReceiveLock)
                 {
                     this.canReceiveNew = true;
                 }
@@ -167,7 +167,7 @@ namespace CsLanBeacon.Lib
 
                 if (Key.Equals(message))
                 {
-                    this.ProbeReceivedResponseEvent?.Invoke(this, new EventArgs());
+                    this.ProbeReceivedResponseEvent?.Invoke(this, new ProbeResponseEventArgs(beacon));
                 }
             }
             // Needed since the disposed object is used once when the worker Task is cancelled.

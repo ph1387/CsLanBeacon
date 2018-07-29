@@ -15,7 +15,10 @@ namespace CsLanBeacon.ConsoleBeacon
 
             beacon.BeaconActiveEvent += (s, e) => { Console.WriteLine("Beacon active."); };
             beacon.BeaconStoppedEvent += (s, e) => { Console.WriteLine("Beacon stopped."); };
-            beacon.BeaconRespondEvent += (s, e) => { Console.WriteLine("Sending response."); };
+            beacon.BeaconResponseEvent += (s, e) =>
+            {
+                Console.WriteLine(String.Format("Sending response to {0}", e.BeaconEndpoint));
+            };
             beacon.Start();
 
             Console.ReadLine();
