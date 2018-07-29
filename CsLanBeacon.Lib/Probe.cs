@@ -46,6 +46,9 @@ namespace CsLanBeacon.Lib
             }
         }
 
+        private bool canReceiveNew = true;
+        private object canReceiveLock = new object();
+
         public Probe(string key, TimeSpan waitTimeBetweenPings, int beaconPort = 8080, int probeReceivePort = 8081) : base(key, beaconPort)
         {
             WaitTimeBetweenPings = waitTimeBetweenPings;
@@ -78,7 +81,14 @@ namespace CsLanBeacon.Lib
                             var allowBroadcast = elapsedTime.CompareTo(WaitTimeBetweenPings) > 0;
                             var remainingTime = WaitTimeBetweenPings.Subtract(elapsedTime);
 
-                            probeClient.BeginReceive(this.HandleBeginReceive, probeClient);
+                            lock(this.canReceiveLock)
+                            {
+                                if(this.canReceiveNew)
+                                {
+                                    this.canReceiveNew = false;
+                                    probeClient.BeginReceive(this.HandleBeginReceive, probeClient);
+                                }
+                            }
 
                             // This way mutliple clients are able to respond without the probe sending another 
                             // set of broadcasts. One broadcast is send every specified interval while multiple
@@ -130,6 +140,12 @@ namespace CsLanBeacon.Lib
                 this._currentState = State.STOPPED;
                 this.tokenSource.Cancel();
                 this.sync.Set();
+
+                // Ensure that another start of the same probe can receive answers again.
+                lock(this.canReceiveLock)
+                {
+                    this.canReceiveNew = true;
+                }
             }
         }
 
@@ -138,6 +154,11 @@ namespace CsLanBeacon.Lib
             try
             {
                 this.sync.Set();
+
+                lock(this.canReceiveLock)
+                {
+                    this.canReceiveNew = true;
+                }
 
                 var probingServer = asyncResult.AsyncState as UdpClient;
                 var beacon = new IPEndPoint(IPAddress.Any, 0);

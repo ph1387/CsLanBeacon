@@ -14,7 +14,6 @@ namespace CsLanBeacon.Lib
     {
         public EventHandler BeaconActiveEvent;
         public EventHandler BeaconStoppedEvent;
-        public EventHandler BeaconBroadcastReceivedEvent;
         public EventHandler BeaconRespondEvent;
 
         public Beacon(string key, int port = 8080) : base(key, port)
@@ -63,8 +62,6 @@ namespace CsLanBeacon.Lib
 
         private void HandleBeginReceive(IAsyncResult asyncResult)
         {
-            this.BeaconBroadcastReceivedEvent?.Invoke(this, new EventArgs());
-            
             try
             {
                 this.sync.Set();
