@@ -94,6 +94,33 @@ namespace CsLanBeacon.Lib
             ProbeReceivePort = probeReceivePort;
         }
 
+        /// <summary>
+        /// A asynchronous function for finding beacons on the lan. This function uses the implemented
+        /// <see cref="Start"/> and <see cref="Stop"/> functions in order to return a collection of 
+        /// found beacons. This collection contains no duplicates.
+        /// </summary>
+        /// <param name="runningTime">The time the Probe is going to be active. Must be greater than 
+        /// the specified <see cref="WaitTimeBetweenPings"/> in order for the function to return 
+        /// anything!</param>
+        /// <returns>A collection of Beacon IPEndpoints on the lan that responded.</returns>
+        public async Task<IEnumerable<IPEndPoint>> FindBeaconEndpointsAsync(TimeSpan runningTime)
+        {
+            // Hashset for preventing duplicates.
+            var beacons = new HashSet<IPEndPoint>();
+            var function = new Action<object, ProbeResponseEventArgs>((s, e) => { beacons.Add(e.BeaconEndpoint); });
+            var handler = new EventHandler<ProbeResponseEventArgs>(function);
+
+            this.ProbeReceivedResponseEvent += handler;
+            this.Start();
+
+            await Task.Delay(runningTime);
+
+            this.Stop();
+            this.ProbeReceivedResponseEvent -= handler;
+
+            return beacons;
+        }
+
         public override void Start()
         {
             if (CurrentState == State.STOPPED)
