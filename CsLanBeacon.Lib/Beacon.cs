@@ -30,7 +30,7 @@ namespace CsLanBeacon.Lib
         /// The event is handled in a different thread. Therefore a dispatcher is needed when 
         /// performing changes in i.e. the UI thread!
         /// </summary>
-        public EventHandler<BeaconResponseEventArgs> BeaconResponseEvent;
+        public EventHandler<ResponseEventArgs> BeaconResponseEvent;
 
         /// <summary>
         /// A Beacon that responds to broadcasting Probes on the lan.
@@ -97,7 +97,7 @@ namespace CsLanBeacon.Lib
                     var responseBytes = Encoding.ASCII.GetBytes(Key);
                     var responseEndpoint = new IPEndPoint(client.Address, client.Port);
 
-                    this.BeaconResponseEvent?.Invoke(this, new BeaconResponseEventArgs(responseEndpoint));
+                    this.BeaconResponseEvent?.Invoke(this, new ResponseEventArgs(responseEndpoint));
                     server.Send(responseBytes, responseBytes.Length, responseEndpoint);
                 }
             }

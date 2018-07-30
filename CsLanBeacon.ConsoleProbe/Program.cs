@@ -18,7 +18,7 @@ namespace CsLanBeacon.ConsoleProbe
             probe.ProbeBroadcastEvent += (s, e) => { Console.WriteLine("Sending broadcast."); };
             probe.ProbeReceivedResponseEvent += (s, e) =>
             {
-                Console.WriteLine(String.Format("Received response from {0}", e.BeaconEndpoint));
+                Console.WriteLine(String.Format("Received response from {0}", e.Endpoint));
             };
             probe.Start();
 

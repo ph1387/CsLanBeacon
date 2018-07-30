@@ -36,7 +36,7 @@ namespace CsLanBeacon.Lib
         /// The event is handled in a different thread. Therefore a dispatcher is needed when 
         /// performing changes in i.e. the UI thread!
         /// </summary>
-        public EventHandler<ProbeResponseEventArgs> ProbeReceivedResponseEvent;
+        public EventHandler<ResponseEventArgs> ProbeReceivedResponseEvent;
 
         private int _probeReceivePort;
         /// <summary>
@@ -107,8 +107,8 @@ namespace CsLanBeacon.Lib
         {
             // Hashset for preventing duplicates.
             var beacons = new HashSet<IPEndPoint>();
-            var function = new Action<object, ProbeResponseEventArgs>((s, e) => { beacons.Add(e.BeaconEndpoint); });
-            var handler = new EventHandler<ProbeResponseEventArgs>(function);
+            var function = new Action<object, ResponseEventArgs>((s, e) => { beacons.Add(e.Endpoint); });
+            var handler = new EventHandler<ResponseEventArgs>(function);
 
             this.ProbeReceivedResponseEvent += handler;
             this.Start();
@@ -238,7 +238,7 @@ namespace CsLanBeacon.Lib
 
                 if (Key.Equals(message))
                 {
-                    this.ProbeReceivedResponseEvent?.Invoke(this, new ProbeResponseEventArgs(beacon));
+                    this.ProbeReceivedResponseEvent?.Invoke(this, new ResponseEventArgs(beacon));
                 }
             }
             // Needed since the disposed object is used once when the worker Task is cancelled.
