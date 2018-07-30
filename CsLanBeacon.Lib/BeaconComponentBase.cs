@@ -28,6 +28,16 @@ namespace CsLanBeacon.Lib
         public string Key
         {
             get { return _key; }
+            set
+            {
+                if(value == null)
+                    throw new ArgumentException("Key must not be null.");
+
+                if (CurrentState == State.STOPPED)
+                {
+                    _key = value;
+                }
+            }
         }
 
         protected int _port;
@@ -52,15 +62,12 @@ namespace CsLanBeacon.Lib
 
         public BeaconComponentBase(string key, int port = 8080)
         {
-            if (key == null)
-                throw new ArgumentException("Key must not be null.");
-
-            this._key = key;
+            Key = key;
             Port = port;
         }
 
         protected CancellationTokenSource tokenSource;
-        protected AutoResetEvent sync = new AutoResetEvent(false);
+        protected AutoResetEvent resetEvent = new AutoResetEvent(false);
 
         public abstract void Start();
         public abstract void Stop();

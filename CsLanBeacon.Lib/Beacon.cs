@@ -60,7 +60,7 @@ namespace CsLanBeacon.Lib
                         {
                             server.BeginReceive(this.HandleBeginReceive, server);
 
-                            this.sync.WaitOne();
+                            this.resetEvent.WaitOne();
                         }
                     }
                 }, token)
@@ -77,7 +77,7 @@ namespace CsLanBeacon.Lib
             {
                 this._currentState = State.STOPPED;
                 this.tokenSource.Cancel();
-                this.sync.Set();
+                this.resetEvent.Set();
             }
         }
 
@@ -85,7 +85,7 @@ namespace CsLanBeacon.Lib
         {
             try
             {
-                this.sync.Set();
+                this.resetEvent.Set();
 
                 var server = asyncResult.AsyncState as UdpClient;
                 var client = new IPEndPoint(IPAddress.Any, 0);

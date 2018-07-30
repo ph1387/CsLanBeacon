@@ -78,7 +78,7 @@ namespace CsLanBeacon.Lib
         }
 
         private bool canReceiveNew = true;
-        private object canReceiveLock = new object();
+        private readonly object canReceiveLock = new object();
 
         /// <summary>
         /// A Probe that broadcasts a UDP packet on the lan for Beacons to respond to. Once started
@@ -175,7 +175,7 @@ namespace CsLanBeacon.Lib
                                 remainingTime = TimeSpan.FromSeconds(0);
                             }
 
-                            this.sync.WaitOne(remainingTime);
+                            this.resetEvent.WaitOne(remainingTime);
                         }
                     }
                 }, token)
@@ -210,7 +210,7 @@ namespace CsLanBeacon.Lib
             {
                 this._currentState = State.STOPPED;
                 this.tokenSource.Cancel();
-                this.sync.Set();
+                this.resetEvent.Set();
 
                 // Ensure that another start of the same probe can receive answers again.
                 lock (this.canReceiveLock)
@@ -224,7 +224,7 @@ namespace CsLanBeacon.Lib
         {
             try
             {
-                this.sync.Set();
+                this.resetEvent.Set();
 
                 lock (this.canReceiveLock)
                 {
