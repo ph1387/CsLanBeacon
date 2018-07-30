@@ -12,12 +12,40 @@ namespace CsLanBeacon.Lib
 {
     public class Probe : BeaconComponentBase
     {
+        /// <summary>
+        /// Event fired when the underlying working task is started. The event is handled
+        /// in a different thread. Therefore a dispatcher is needed when performing changes
+        /// in i.e. the UI thread!
+        /// </summary>
         public EventHandler ProbeActiveEvent;
+        /// <summary>
+        /// Event fired when the underlying working task is stopped. The event is handled
+        /// in a different thread. Therefore a dispatcher is needed when performing changes
+        /// in i.e. the UI thread!
+        /// </summary>
         public EventHandler ProbeStoppedEvent;
+        /// <summary>
+        /// Event fired when the underlying working task sends a broadcast on the lan. The 
+        /// event is handled in a different thread. Therefore a dispatcher is needed when 
+        /// performing changes in i.e. the UI thread!
+        /// </summary>
         public EventHandler ProbeBroadcastEvent;
+        /// <summary>
+        /// Event fired when the underlying working task receives a response to a broadcast. 
+        /// The ProbeResponseEventArgs contain information about the sender.
+        /// The event is handled in a different thread. Therefore a dispatcher is needed when 
+        /// performing changes in i.e. the UI thread!
+        /// </summary>
         public EventHandler<ProbeResponseEventArgs> ProbeReceivedResponseEvent;
 
         private int _probeReceivePort;
+        /// <summary>
+        /// The port the Probe will receive responses on. A server is openend on this port and 
+        /// is listening for incoming broadcast answers. It can be the same as the one the 
+        /// Beacon is listening on. In this case the Probe will find itself on the lan and fire
+        /// an event. Therefore it is advised to use different port unless the Probe should 
+        /// discover itself.
+        /// </summary>
         public int ProbeReceivePort
         {
             get { return _probeReceivePort; }
@@ -34,6 +62,9 @@ namespace CsLanBeacon.Lib
         }
 
         private TimeSpan _waitTimeBetweenPings;
+        /// <summary>
+        /// The time the Probe will wait between pings / broadcasts.
+        /// </summary>
         public TimeSpan WaitTimeBetweenPings
         {
             get { return _waitTimeBetweenPings; }
@@ -49,7 +80,15 @@ namespace CsLanBeacon.Lib
         private bool canReceiveNew = true;
         private object canReceiveLock = new object();
 
-        public Probe(string key, TimeSpan waitTimeBetweenPings, int beaconPort = 8080, int probeReceivePort = 8081) : base(key, beaconPort)
+        /// <summary>
+        /// A Probe that broadcasts a UDP packet on the lan for Beacons to respond to. Once started
+        /// the Probe will send broadcasts in defined intervals until stopped.
+        /// </summary>
+        /// <param name="key">The key that is used for identifying a matching Beacon on the lan.</param>
+        /// <param name="waitTimeBetweenPings">The time the Probe should wait between broadcasts.</param>
+        /// <param name="port">The port a Beacon is listening on.</param>
+        /// <param name="probeReceivePort">The port the Probe should receive answers on.</param>
+        public Probe(string key, TimeSpan waitTimeBetweenPings, int port = 8080, int probeReceivePort = 8081) : base(key, port)
         {
             WaitTimeBetweenPings = waitTimeBetweenPings;
             ProbeReceivePort = probeReceivePort;
@@ -120,6 +159,11 @@ namespace CsLanBeacon.Lib
             }
         }
 
+        /// <summary>
+        /// Function for receiving the ip address of the machine. This function does NOT require an 
+        /// active internet connection since only the endpoint of the socket is being used.
+        /// </summary>
+        /// <returns>The ip address of the machine.</returns>
         private IPAddress GetOwnIpAddress()
         {
             IPAddress ip;

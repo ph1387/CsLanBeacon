@@ -11,18 +11,30 @@ namespace CsLanBeacon.Lib
     public abstract class BeaconComponentBase
     {
         protected State _currentState = State.STOPPED;
+        /// <summary>
+        /// The state the BeaconComponent is currently in. Changes to properties can only 
+        /// be applied when it is set to "STOPPED".
+        /// </summary>
         public State CurrentState
         {
             get { return _currentState; }
         }
 
         protected string _key;
+        /// <summary>
+        /// The key that is used to identify a listening Beacon on the network. Both the 
+        /// Beacon as well as the Probe must use the same one in order to find one another.
+        /// </summary>
         public string Key
         {
             get { return _key; }
         }
 
         protected int _port;
+        /// <summary>
+        /// The port the Beacon is listening and the Probe is probing on. Must be the same 
+        /// for both parties.
+        /// </summary>
         public int Port
         {
             get { return _port; }

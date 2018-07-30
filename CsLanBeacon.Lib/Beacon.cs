@@ -12,10 +12,31 @@ namespace CsLanBeacon.Lib
 {
     public class Beacon : BeaconComponentBase
     {
+        /// <summary>
+        /// Event fired when the underlying working task is started. The event is handled
+        /// in a different thread. Therefore a dispatcher is needed when performing changes
+        /// in i.e. the UI thread!
+        /// </summary>
         public EventHandler BeaconActiveEvent;
+        /// <summary>
+        /// Event fired when the underlying working task is stopped. The event is handled
+        /// in a different thread. Therefore a dispatcher is needed when performing changes
+        /// in i.e. the UI thread!
+        /// </summary>
         public EventHandler BeaconStoppedEvent;
+        /// <summary>
+        /// Event fired when the underlying working task sends a response to a Probe's broadcast. 
+        /// The BeaconResponseEventArgs contain information about the sender.
+        /// The event is handled in a different thread. Therefore a dispatcher is needed when 
+        /// performing changes in i.e. the UI thread!
+        /// </summary>
         public EventHandler<BeaconResponseEventArgs> BeaconResponseEvent;
 
+        /// <summary>
+        /// A Beacon that responds to broadcasting Probes on the lan.
+        /// </summary>
+        /// <param name="key">The key that is used for identifying a matching Probe on the lan.</param>
+        /// <param name="port">The port the Beacon is listening on.</param>
         public Beacon(string key, int port = 8080) : base(key, port)
         {
 
