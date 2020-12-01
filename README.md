@@ -67,4 +67,4 @@ public async void UpdateEndpointCollection()
 ```
 
 ## License
-MIT [license](https://github.com/p1387h/CsLanBeacon/blob/master/LICENSE.txt)
+MIT [license](https://github.com/ph1387/CsLanBeacon/blob/master/LICENSE.txt)
